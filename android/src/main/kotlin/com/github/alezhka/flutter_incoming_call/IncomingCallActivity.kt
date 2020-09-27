@@ -32,7 +32,7 @@ class IncomingCallActivity : AppCompatActivity() {
         fun dismissIncoming(uuid: String?) {
             fa?.let {
                 if(uuid == null || uuid == it.callData.uuid) {
-                    CallPlayer.getInstance(it).stop()
+                    FlutterIncomingCallPlugin.ringtonePlayer?.stop()
                     it.finish()
                 }
             }
@@ -92,21 +92,25 @@ class IncomingCallActivity : AppCompatActivity() {
                     .into(ivAvatar)
         }
 
-        val ringtonePlayer = CallPlayer.getInstance(this)
-
         val acceptCallBtn = findViewById<ImageView>(R.id.ivAcceptCall)
         acceptCallBtn.setOnClickListener {
-            ringtonePlayer.stop()
+            FlutterIncomingCallPlugin.ringtonePlayer?.stop()
             acceptDialing()
         }
         val rejectCallBtn = findViewById<ImageView>(R.id.ivDeclineCall)
         rejectCallBtn.setOnClickListener {
-            ringtonePlayer.stop()
+            FlutterIncomingCallPlugin.ringtonePlayer?.stop()
             declineDialing()
         }
 
-        if (!ringtonePlayer.isPlaying()) {
-            ringtonePlayer.play(callData)
+        val callPrefs = CallPreferences(this)
+        val config = FlutterIncomingCallPlugin.config ?: callPrefs.config ?: FactoryModels.defaultConfig()
+        if(FlutterIncomingCallPlugin.ringtonePlayer == null) {
+            FlutterIncomingCallPlugin.ringtonePlayer = CallPlayer(this, config)
+        }
+
+        FlutterIncomingCallPlugin.ringtonePlayer?.let {
+            if(!it.isPlaying()) it.play(callData)
         }
     }
 

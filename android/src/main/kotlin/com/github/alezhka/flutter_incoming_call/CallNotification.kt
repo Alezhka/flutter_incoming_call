@@ -27,12 +27,14 @@ class CallNotification(private val context: Context) {
                 Notification.PRIORITY_MAX
             }
     }
-    
-    private val ringtonePlayer: CallPlayer = CallPlayer.getInstance(context)
 
     fun showCallNotification(callData: CallData, config: PluginConfig) {
-        if(!ringtonePlayer.isPlaying()) {
-            ringtonePlayer.play(callData)
+        if(FlutterIncomingCallPlugin.ringtonePlayer == null) {
+            FlutterIncomingCallPlugin.ringtonePlayer = CallPlayer(context, config)
+        }
+
+        FlutterIncomingCallPlugin.ringtonePlayer?.let {
+            if(!it.isPlaying()) it.play(callData)
         }
 
         val notificationID = callData.notificationId
@@ -46,7 +48,7 @@ class CallNotification(private val context: Context) {
                 .setDefaults(0)
                 .setCategory(Notification.CATEGORY_CALL)
                 .setOngoing(true)
-                .setTimeoutAfter(callData.duration)
+                .setTimeoutAfter(config.duration)
                 .setOnlyAlertOnce(true)
                 .setFullScreenIntent(getCallerActivityPendingIntent(notificationID, callData), true)
                 .setContentIntent(getCallerActivityPendingIntent(notificationID, callData))
@@ -63,21 +65,13 @@ class CallNotification(private val context: Context) {
         notificationManager.notify(notificationID, notification)
     }
 
-    //Missed Call Notification
-    fun showMissCallNotification(title: String, body: String, callerId: String?) {
-        Log.i("WebrtcPushNotification", "$title ======  $body")
-        val missNotification = 123
+    fun showMissCallNotification(callData: CallData) {
+        val notificationID = callData.notificationId
         val missedCallSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val intentClass = Utils.getMainActivityClass(context)
-        val intent = Intent(context, intentClass)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        intent.putExtra("notificationId", missNotification)
-        intent.putExtra("callerId", callerId)
-        intent.action = "missedCallTape"
-        val contentIntent = PendingIntent.getActivity(context, missNotification, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val contentIntent = getCallerActivityPendingIntent(notificationID, callData)
         val notification: Notification = NotificationCompat.Builder(context, notificationChannel)
-                .setContentTitle(title)
-                .setContentText(body)
+                .setContentTitle(callData.name)
+                .setContentText(callData.handle)
                 .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound(missedCallSound)
@@ -85,7 +79,7 @@ class CallNotification(private val context: Context) {
                 .build()
         val notificationManager = notificationManager()
         createNotificationChannel(notificationManager, missedCallSound)
-        notificationManager.notify(missNotification, notification)
+        notificationManager.notify(notificationID, notification)
     }
 
     fun clearNotification(notificationID: Int) {
@@ -115,16 +109,6 @@ class CallNotification(private val context: Context) {
             }
             manager.createNotificationChannel(channel)
         }
-    }
-
-    private fun getMainActivityPendingIntent(notificationID: Int, action: String, callData: CallData): PendingIntent? {
-        val intent = Intent(context, Utils.getMainActivityClass(context)).apply {
-            setAction(action)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            putExtra("notificationId", notificationID)
-            putExtra("uuid", callData.uuid)
-        }
-        return PendingIntent.getActivity(context, notificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun getCallerActivityPendingIntent(notificationID: Int, callData: CallData): PendingIntent? {

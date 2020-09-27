@@ -47,39 +47,45 @@ class CallBroadcastReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val callNotification = CallNotification(context)
-        val callPlayer = CallPlayer.getInstance(context)
+        val callPrefs = CallPreferences(context)
+        val config = FlutterIncomingCallPlugin.config ?: callPrefs.config ?: FactoryModels.defaultConfig()
+        if(FlutterIncomingCallPlugin.ringtonePlayer == null) {
+            FlutterIncomingCallPlugin.ringtonePlayer = CallPlayer(context, config)
+        }
         val action = intent.action ?: return
 
         val callData = intent.getParcelableExtra<CallData>(EXTRA_CALL_DATA) ?: return
         when(action) {
             ACTION_STARTED -> {
-                sendEvent(EVENT_CALL_STARTED, callData)
+                sendCallEvent(EVENT_CALL_STARTED, callData)
             }
             ACTION_ACCEPT -> {
-                callPlayer.stop()
+                FlutterIncomingCallPlugin.ringtonePlayer?.stop()
                 callNotification.clearNotification(callData.notificationId)
                 
                 Utils.backToForeground(context, FlutterIncomingCallPlugin.activity)
-                sendEvent(EVENT_CALL_ACCEPT, callData)
+                sendCallEvent(EVENT_CALL_ACCEPT, callData)
             }
             ACTION_DISMISS -> {
-                callPlayer.stop()
+                FlutterIncomingCallPlugin.ringtonePlayer?.stop()
                 callNotification.clearNotification(callData.notificationId)
-                sendEvent(EVENT_CALL_DECLINE, callData)
+                sendCallEvent(EVENT_CALL_DECLINE, callData)
             }
             ACTION_TIMEOUT -> {
-                // rnVoipNotificationHelper.showMissCallNotification(intent.getStringExtra("missedCallTitle"), intent.getStringExtra("missedCallBody"), intent.getStringExtra("callerId"));
-                sendEvent(EVENT_CALL_MISSED, callData)
+                callNotification.showMissCallNotification(callData)
+                sendCallEvent(EVENT_CALL_MISSED, callData)
             }
         }
     }
 
-    private fun sendEvent(event: String, callData: CallData) {
+    private fun sendCallEvent(event: String, callData: CallData) {
         val actionData = mapOf(
                 "uuid" to callData.uuid,
                 "name" to callData.name,
                 "number" to callData.handle,
-                "avatar" to callData.avatar
+                "avatar" to callData.avatar,
+                "handleType" to callData.handleType,
+                "hasVideo" to callData.hasVideo
         )
         FlutterIncomingCallPlugin.eventHandler.send(event, actionData)
     }

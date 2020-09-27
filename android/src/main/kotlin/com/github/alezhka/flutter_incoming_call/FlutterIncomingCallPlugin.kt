@@ -21,6 +21,8 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   companion object {
     var activity: Activity? = null
     val eventHandler = EventStreamHandler()
+    var ringtonePlayer: CallPlayer? = null
+    var config: PluginConfig? = null
   }
   
   /// The MethodChannel that will the communication between Flutter and native Android
@@ -31,8 +33,8 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   private lateinit var events: EventChannel
   private var context: Context? = null
   private var notificationCall: CallNotification? = null
-  private lateinit var config: PluginConfig
   private var isConfigured = false
+  private var callPrefs: CallPreferences? = null
   
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_incoming_call")
@@ -45,7 +47,15 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
     when(call.method) {
       "configure" -> {
         config = FactoryModels.parseConfig(call)
+        callPrefs?.config = config
+
+        if(ringtonePlayer == null) {
+          ringtonePlayer = CallPlayer(context!!, config!!)
+        } else {
+          ringtonePlayer!!.config = config!!
+        }
         isConfigured = true
+
         result.success(null)
       }
       "displayIncomingCall" -> {
@@ -60,21 +70,25 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
           if(Utils.isDeviceScreenLocked(it)) {
             IncomingCallActivity.start(callData)
           } else {
-            notificationCall?.showCallNotification(callData, config)
+            notificationCall?.showCallNotification(callData, config!!)
           }
           it.sendBroadcast(CallBroadcastReceiver.startedIntent(it, callData))
         }
+
         result.success(null)
       }
       "endCall" -> {
         val uuid = call.argument<String>("uuid")
         IncomingCallActivity.dismissIncoming(uuid)
-        notificationCall?.clearAllNotifications()
+        notificationCall?.clearNotification(uuid.hashCode())
+        ringtonePlayer?.stop()
+
         result.success(null)
       }
       "endAllCalls" -> {
         IncomingCallActivity.dismissIncoming(null)
         notificationCall?.clearAllNotifications()
+        ringtonePlayer?.stop()
 
         result.success(null)
       }
@@ -92,17 +106,20 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
     activity = binding.activity
     context = binding.activity
     notificationCall = CallNotification(context!!)
+    callPrefs = CallPreferences(binding.activity)
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
     activity = null
     context = null
     notificationCall = null
+    callPrefs = null
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     activity = binding.activity
     context = binding.activity
+    callPrefs = CallPreferences(binding.activity)
     notificationCall = CallNotification(context!!)
   }
 

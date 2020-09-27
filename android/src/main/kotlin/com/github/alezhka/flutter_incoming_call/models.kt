@@ -3,13 +3,15 @@ package com.github.alezhka.flutter_incoming_call
 import android.os.Parcelable
 import io.flutter.plugin.common.MethodCall
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 data class PluginConfig(
         val appName: String,
         val channelId: String,
         val channelName: String,
-        val channelDescription: String
+        val channelDescription: String,
+        val vibration: Boolean,
+        val ringtonePath: String?,
+        val duration: Long
 )
 
 @Parcelize
@@ -19,37 +21,45 @@ data class CallData(
         val name: String,
         val avatar: String?,
         val handleType: String,
-        val hasVideo: Boolean,
-        val notificationId: Int,
-        val vibration: Boolean,
-        val ringtone: Boolean,
-        val ringtonePath: String,
-        val duration: Long
-) : Parcelable
+        val hasVideo: Boolean
+) : Parcelable {
+
+    val notificationId: Int
+        get() = uuid.hashCode()
+}
 
 
 object FactoryModels {
 
     fun parseCallData(call: MethodCall): CallData {
-        val uuid = call.argument<String>("uuid") ?: ""
-        val handle = call.argument<String>("handle") ?: ""
-        val name = call.argument<String>("name") ?: ""
-        val handleType = call.argument<String>("handleType") ?: ""
-        val avatar = call.argument<String>("avatar")
-        val hasVideo = call.argument<Boolean>("hasVideo") ?: false
-        val notificationId = call.argument<Int>("notificationId") ?: Random().nextInt(10000)
-        val vibration = call.argument<Boolean>("vibration") ?: false
-        val ringtone = call.argument<Boolean>("ringtone") ?: false
-        val ringtonePath = call.argument<String>("ringtonePath") ?: "default"
-        val duration = call.argument<Long>("duration") ?: 30000L
-        return CallData(uuid, handle, name, avatar, handleType, hasVideo, notificationId, vibration, ringtone, ringtonePath, duration)
+        val uuid = call.argument("uuid") as String? ?: ""
+        val handle = call.argument("handle") as String? ?: ""
+        val name = call.argument("name") as String? ?: ""
+        val handleType = call.argument("handleType") as String? ?: ""
+        val avatar = call.argument("avatar") as String?
+        val hasVideo = call.argument("hasVideo") as Boolean? ?: false
+        return CallData(uuid, handle, name, avatar, handleType, hasVideo)
     }
 
     fun parseConfig(call: MethodCall): PluginConfig {
-        val appName = call.argument<String>("appName") ?: ""
-        val channelId = call.argument<String>("channelId") ?: ""
-        val channelName = call.argument<String>("channelName") ?: ""
-        val channelDescription = call.argument<String>("channelDescription") ?: ""
-        return PluginConfig(appName, channelId, channelName, channelDescription)
+        val appName = call.argument("appName") ?: ""
+        val channelId = call.argument("channelId") as String? ?: ""
+        val channelName = call.argument("channelName") as String? ?: ""
+        val channelDescription = call.argument("channelDescription") as String? ?: ""
+        val duration = (call.argument("duration") as Int? ?: 30000).toLong()
+        val vibration = call.argument("vibration") as Boolean? ?: false
+        val ringtonePath = call.argument("ringtonePath") as String?
+        return PluginConfig(appName, channelId, channelName, channelDescription, vibration, ringtonePath, duration)
+    }
+
+    fun defaultConfig(): PluginConfig {
+        val appName = ""
+        val channelId = "call_channel_id"
+        val channelName = "Call channel"
+        val channelDescription = "Call channel"
+        val duration = 30000L
+        val vibration = false
+        val ringtonePath = "default"
+        return PluginConfig(appName, channelId, channelName, channelDescription, vibration, ringtonePath, duration)
     }
 }

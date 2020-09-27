@@ -8,33 +8,30 @@ import android.os.Handler
 import android.os.VibrationEffect
 import android.os.Vibrator
 
-class CallPlayer private constructor(private val mContext: Context) {
-
-    companion object {
-
-        @Volatile private var INSTANCE: CallPlayer? = null
-
-        fun getInstance(context: Context): CallPlayer =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: CallPlayer(context).also { INSTANCE = it }
-            }
-
-    }
+class CallPlayer(private val context: Context, var config: PluginConfig) {
 
     private var mMediaPlayer: MediaPlayer? = null
-    private val vibrator: Vibrator = mContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    private val vibrator: Vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     private val pattern = longArrayOf(0, 1000, 800)
     private var isPlaying = false
     
     private val handler = Handler()
 
     fun play(callData: CallData) {
-        if(callData.vibration) playVibrate()
-        if(callData.ringtone) playMusic(callData)
+        if(isPlaying) {
+            stop()
+        }
+
+        if(config.vibration) playVibrate()
+        if(config.ringtonePath != null) playMusic(callData)
         isPlaying = true
     }
 
     fun stop() {
+        if(!isPlaying) {
+            return
+        }
+
         stopMusic()
         stopVibrate()
         isPlaying = false
@@ -45,12 +42,12 @@ class CallPlayer private constructor(private val mContext: Context) {
     }
 
     private fun playMusic(callData: CallData) {
-        val uri = getRingtoneUri(callData.ringtonePath)
+        val uri = getRingtoneUri(config.ringtonePath!!)
         val attribution = AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .build()
-        mMediaPlayer = MediaPlayer.create(mContext, uri).apply {
+        mMediaPlayer = MediaPlayer.create(context, uri).apply {
             isLooping = true
             setAudioAttributes(attribution)
             start()
@@ -82,24 +79,24 @@ class CallPlayer private constructor(private val mContext: Context) {
     }
 
     private fun getRingtoneUri(fileName: String) = try {
-        val resId = mContext.resources.getIdentifier(fileName, "raw", mContext.packageName)
+        val resId = context.resources.getIdentifier(fileName, "raw", context.packageName)
         if (resId != 0) {
-            Uri.parse("android.resource://${mContext.packageName}/$resId")
+            Uri.parse("android.resource://${context.packageName}/$resId")
         } else {
-            Uri.parse("android.resource://${mContext.packageName}/${R.raw.ringtone}")
+            Uri.parse("android.resource://${context.packageName}/${R.raw.ringtone}")
         }
     } catch (e: Exception) {
-        Uri.parse("android.resource://${mContext.packageName}/${R.raw.ringtone}")
+        Uri.parse("android.resource://${context.packageName}/${R.raw.ringtone}")
     }
 
     private fun cancelWithTimeOut(callData: CallData) {
         handler.postDelayed({
             if (mMediaPlayer?.isPlaying == true) {
-                val intent = CallBroadcastReceiver.timeoutIntent(mContext, callData)
-                mContext.sendBroadcast(intent)
+                val intent = CallBroadcastReceiver.timeoutIntent(context, callData)
+                context.sendBroadcast(intent)
                 stop()
             }
-        }, callData.duration)
+        }, config.duration)
     }
 
 }

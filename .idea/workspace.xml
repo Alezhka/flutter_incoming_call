@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6b00e40-9c30-4523-8545-73a7aea3b426" name="Default Changelist" comment="" />
+    <list default="true" id="a6b00e40-9c30-4523-8545-73a7aea3b426" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/CallPreferences.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/src/main/res/values-ru/strings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/config.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/CallBroadcastReceiver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/CallBroadcastReceiver.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/CallNotification.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/CallNotification.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/CallPlayer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/CallPlayer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/FlutterIncomingCallPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/FlutterIncomingCallPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/IncomingCallActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/IncomingCallActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/models.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/com/github/alezhka/flutter_incoming_call/models.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_incoming_call.iml" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_incoming_call.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Classes/SwiftFlutterIncomingCallPlugin.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/SwiftFlutterIncomingCallPlugin.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Classes/models.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/models.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/flutter_incoming_call.podspec" beforeDir="false" afterPath="$PROJECT_DIR$/ios/flutter_incoming_call.podspec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/flutter_incoming_call.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_incoming_call.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models.dart" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,8 +37,12 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin File" />
+        <option value="Dart File" />
       </list>
     </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1gd5bLmB6cgGNqTC3F7OTA4O77L" />
   <component name="ProjectViewState">
@@ -22,9 +51,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
@@ -74,11 +104,11 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="100" y="100" width="1240" height="700" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1440.900@0.0.1440.900" timestamp="1600256379564" />
-    <state x="390" y="294" key="com.intellij.ide.util.TipDialog" timestamp="1600258372742">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="390" y="294" key="com.intellij.ide.util.TipDialog" timestamp="1600970841636">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="390" y="294" key="com.intellij.ide.util.TipDialog/0.0.1440.900@0.0.1440.900" timestamp="1600258372742" />
-    <state x="390" y="294" key="com.intellij.ide.util.TipDialog/0.23.1440.877@0.23.1440.877" timestamp="1598873344224" />
+    <state x="390" y="294" key="com.intellij.ide.util.TipDialog/0.23.1440.877@0.23.1440.877" timestamp="1600970841636" />
     <state x="385" y="210" key="run.anything.popup" timestamp="1600258378309">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

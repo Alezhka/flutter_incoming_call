@@ -6,10 +6,16 @@ import NotificationCenter
 
 public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProviderDelegate {
     
+    private static let SETTINGS_KEY = "FlutterIncomingCallSettings"
+    
     private static let EVENT_CALL_STARTED = "call_started"
     private static let EVENT_CALL_ACCEPT = "call_accept"
     private static let EVENT_CALL_DECLINE = "call_decline"
     private static let EVENT_CALL_MISSED = "call_missed"
+    private static let EVENT_TOGGLE_HOLD = "toggle_hold"
+    private static let EVENT_TOGGLE_MUTE = "toggle_mute"
+    private static let EVENT_TOGGLE_DMTF = "toggle_dmtf"
+    private static let EVENT_TOGGLE_AUDIOSESSION = "toggle_audiosession"
     
     static var sharedProvider: CXProvider? = nil
     
@@ -43,11 +49,12 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
                 result(nil)
                 return
             }
-            if let myArgs = args as? [String: Any] {
+            if let myArgs = args as? [String: Any?] {
                 config = Config(args: myArgs)
+                saveConfig(config!)
             }
             callKeepCallController = CXCallController()
-            initCallKitProvider(config!)
+            initCallKitProvider()
             osVersion = ProcessInfo().operatingSystemVersion
             self.callKeepProvider = SwiftFlutterIncomingCallPlugin.sharedProvider!
             self.callKeepProvider?.setDelegate(self, queue: nil)
@@ -61,7 +68,7 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
             }
             if let myArgs = args as? [String: Any] {
                 let callData = CallData(args: myArgs)
-                reportNewIncomingCall(callData: callData, fromPushKit: false)
+                reportNewIncomingCall(callData, fromPushKit: false)
             }
             result(nil)
             break
@@ -96,9 +103,11 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         }
     }
     
-    func reportNewIncomingCall(callData: CallData, fromPushKit: Bool) {
+    func reportNewIncomingCall(_ callData: CallData, fromPushKit: Bool) {
         print("reportNewIncomingCall")
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(callData.duration)) {
+        loadConfigIfNeed()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(config!.duration)) {
             self.callEndTimeout(callData)
         }
         
@@ -117,7 +126,7 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         callUpdate.hasVideo = callData.hasVideo
         callUpdate.localizedCallerName = callData.name
         
-        initCallKitProvider(config!)
+        initCallKitProvider()
         
         SwiftFlutterIncomingCallPlugin.sharedProvider?.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
             if (error == nil) {
@@ -156,22 +165,36 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         if(callsAttended[callData.uuid] == true) {
             endCallWithUUID(callData.uuid, 2)
             
-            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_MISSED, callData)
+            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_MISSED, callData.toMap())
         }
     }
     
-    func initCallKitProvider(_ config: Config) {
+    func initCallKitProvider() {
+        loadConfigIfNeed()
+        
         if (SwiftFlutterIncomingCallPlugin.sharedProvider == nil) {
-            SwiftFlutterIncomingCallPlugin.sharedProvider = CXProvider(configuration: getProviderConfiguration(config))
+            SwiftFlutterIncomingCallPlugin.sharedProvider = CXProvider(configuration: getProviderConfiguration(config!))
         }
     }
     
+    func loadConfigIfNeed() {
+        if(config == nil) {
+            let settings = UserDefaults.standard.object(forKey: SwiftFlutterIncomingCallPlugin.SETTINGS_KEY) as? [String : Any?] ?? [:]
+            config = Config(args: settings)
+        }
+    }
+    
+    func saveConfig(_ config: Config) {
+        UserDefaults.standard.set(config.toMap(), forKey: SwiftFlutterIncomingCallPlugin.SETTINGS_KEY)
+        UserDefaults.standard.synchronize()
+    }
 
     func getProviderConfiguration(_ config: Config) -> CXProviderConfiguration {
         let providerConfiguration = CXProviderConfiguration(localizedName: config.appName)
-        providerConfiguration.supportsVideo = true
-        providerConfiguration.maximumCallGroups = 2
-        providerConfiguration.maximumCallsPerCallGroup = 1
+        
+        providerConfiguration.supportsVideo = config.supportsVideo
+        providerConfiguration.maximumCallGroups = config.maximumCallGroups
+        providerConfiguration.maximumCallsPerCallGroup = config.maximumCallsPerCallGroup
     
         providerConfiguration.supportedHandleTypes = [
             CXHandle.HandleType.generic,
@@ -180,17 +203,16 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         ]
         
         if #available(iOS 11.0, *) {
-            if (config.includesCallsInRecents) {
-                providerConfiguration.includesCallsInRecents = config.includesCallsInRecents
-            }
+            providerConfiguration.includesCallsInRecents = config.includesCallsInRecents
         }
         
-        /*
-        let image = UIImage(named: callData.avatar!)
-        providerConfiguration.iconTemplateImageData = image!.pngData()
-         
-        providerConfiguration.ringtoneSound = callData.ringtonePath
-        */
+        if(config.iconName != nil) {
+            let image = UIImage(named: config.iconName!)
+            providerConfiguration.iconTemplateImageData = image!.pngData()
+        }
+        if(config.ringtonePath != nil) {
+            providerConfiguration.ringtoneSound = config.ringtonePath!
+        }
         return providerConfiguration
     }
     
@@ -264,14 +286,8 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         }
     }
     
-    func sendEvent(_ event: String, _ callData: CallData) {
-        let body = [
-            "uuid": callData.uuid,
-            "name": callData.name,
-            "handle": callData.handle,
-            "avatar": callData.avatar
-        ]
-        eventStreamHandler?.send(event, body as [String : Any])
+    func sendEvent(_ event: String, _ body: [String : Any]) {
+        eventStreamHandler?.send(event, body)
     }
     
     // MARK: CXProviderDelegate
@@ -287,7 +303,7 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         
         let uuidString = action.callUUID.uuidString.lowercased()
         if let callData = callsData[uuidString] {
-            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_STARTED, callData)
+            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_STARTED, callData.toMap())
         }
         action.fulfill()
     }
@@ -297,7 +313,7 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         let uuidString = action.callUUID.uuidString.lowercased()
         
         if let callData = callsData[uuidString] {
-            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_ACCEPT, callData)
+            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_ACCEPT, callData.toMap())
         }
         callsAttended[uuidString] = true
         
@@ -308,12 +324,12 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         let uuidString = action.callUUID.uuidString.lowercased()
         if(callsAttended[uuidString] == true) {
             if let callData = callsData[uuidString] {
-                sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_MISSED, callData)
+                sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_MISSED, callData.toMap())
             }
         }
     
         if let callData = callsData[uuidString] {
-            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_DECLINE, callData)
+            sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_DECLINE, callData.toMap())
         }
         
         callsAttended.removeValue(forKey: uuidString)
@@ -323,17 +339,26 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
     }
 
     public func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
-        // [self sendEventWithName:RNVoipCallDidToggleHoldAction body:@{ @"hold": @(action.onHold), @"callUUID": [action.callUUID.UUIDString lowercaseString] }];
+        let uuidString = action.callUUID.uuidString.lowercased()
+        let holdData = ToggleHoldData(uuidString, action.isOnHold)
+        sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_TOGGLE_HOLD, holdData.toMap())
+        
         action.fulfill()
     }
 
     public func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
-        // [self sendEventWithName:RNVoipCallDidPerformSetMutedCallAction body:@{ @"muted": @(action.muted), @"callUUID": [action.callUUID.UUIDString lowercaseString] }];
+        let uuidString = action.callUUID.uuidString.lowercased()
+        let mutedData = ToggleMutedData(uuidString, action.isMuted)
+        sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_TOGGLE_MUTE, mutedData.toMap())
+        
         action.fulfill()
     }
 
     public func provider(_ provider: CXProvider, perform action: CXPlayDTMFCallAction) {
-        // [self sendEventWithName:RNVoipCallPerformPlayDTMFCallAction body:@{ @"digits": action.digits, @"callUUID": [action.callUUID.UUIDString lowercaseString] }];
+        let uuidString = action.callUUID.uuidString.lowercased()
+        let dmtfData = ToggleDmtfData(uuidString, action.digits)
+        sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_TOGGLE_DMTF, dmtfData.toMap())
+        
         action.fulfill()
     }
     
@@ -351,11 +376,14 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
             object: nil,
             userInfo: userInfo)
         configureAudioSession()
-        // [self sendEventWithName:RNVoipCallDidActivateAudioSession body:nil];
+        
+        let audiosessionData = ToggleAudiosessionData(true)
+        sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_TOGGLE_AUDIOSESSION, audiosessionData.toMap())
     }
 
     public func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
-        // [self sendEventWithName:RNVoipCallDidDeactivateAudioSession body:nil];
+        let audiosessionData = ToggleAudiosessionData(false)
+        sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_TOGGLE_AUDIOSESSION, audiosessionData.toMap())
     }
     
 }
