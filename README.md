@@ -56,7 +56,7 @@ FlutterIncomingCall.endAllCalls();
 
 ## Demo
 
-ios | ios (Lockscreen) | Android  | android (Lockscreen)
+ios | ios (Lockscreen) | Android  | Android (Lockscreen)
 --- | --- | --- | ---
 <img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/ios_incoming_call_2.PNG" style="max-width:100%;"> | <img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/ios_incoming_call_1.PNG" style="max-width:100%;"> | <img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/android_incoming_call_2.png" style="max-width:100%;"> | <img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/android_incoming_call_1.png" style="max-width:100%;">
 
