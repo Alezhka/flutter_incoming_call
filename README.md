@@ -58,7 +58,7 @@ FlutterIncomingCall.endAllCalls();
 
 ios | ios (Lockscreen) | Android  | android (Lockscreen)
 --- | --- | --- | ---
-<img height="500" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/ios_incoming_call_2.PNG" style="max-width:100%;"> | <img height="500" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/ios_incoming_call_1.PNG" style="max-width:100%;"> | <img height="500" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/android_incoming_call_2.PNG" style="max-width:100%;"> | <img height="500" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/android_incoming_call_1.PNG" style="max-width:100%;">
+<img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/ios_incoming_call_2.PNG" style="max-width:100%;"> | <img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/ios_incoming_call_1.PNG" style="max-width:100%;"> | <img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/android_incoming_call_2.png" style="max-width:100%;"> | <img height="300" src="https://raw.githubusercontent.com/Alezhka/flutter_incoming_call/master/media/android_incoming_call_1.png" style="max-width:100%;">
 
 
 ## Example
