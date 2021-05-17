@@ -9,9 +9,9 @@ class ConfigAndroid {
   final bool vibration;
 
   ConfigAndroid({
-    @required this.channelId,
-    @required this.channelName,
-    @required this.channelDescription,
+    required this.channelId,
+    required this.channelName,
+    required this.channelDescription,
     this.ringtonePath = "default",
     this.vibration = false,
   });
@@ -31,15 +31,15 @@ class ConfigIOS {
   final bool includesCallsInRecents;
   final int maximumCallGroups;
   final int maximumCallsPerCallGroup;
-  final String ringtonePath;
   final String iconName;
+  final String? ringtonePath;
 
   ConfigIOS({
-    @required this.supportsVideo,
-    @required this.includesCallsInRecents,
-    @required this.maximumCallGroups,
-    @required this.maximumCallsPerCallGroup,
-    @required this.iconName,
+    required this.supportsVideo,
+    required this.includesCallsInRecents,
+    required this.maximumCallGroups,
+    required this.maximumCallsPerCallGroup,
+    required this.iconName,
     this.ringtonePath,
   });
 

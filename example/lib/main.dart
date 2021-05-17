@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_incoming_call/flutter_incoming_call.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,12 +17,12 @@ class _MyAppState extends State<MyApp> {
 
   var uuid = Uuid();
 
-  BaseCallEvent _lastEvent;
-  CallEvent _lastCallEvent;
-  HoldEvent _lastHoldEvent;
-  MuteEvent _lastMuteEvent;
-  DmtfEvent _lastDmtfEvent;
-  AudioSessionEvent _lastAudioSessionEvent;
+  BaseCallEvent? _lastEvent;
+  CallEvent? _lastCallEvent;
+  HoldEvent? _lastHoldEvent;
+  MuteEvent? _lastMuteEvent;
+  DmtfEvent? _lastDmtfEvent;
+  AudioSessionEvent? _lastAudioSessionEvent;
 
   void _incomingCall() {
     final uid = uuid.v4();
@@ -37,7 +36,7 @@ class _MyAppState extends State<MyApp> {
 
   void _endCurrentCall() {
     if(_lastEvent != null) {
-      FlutterIncomingCall.endCall(_lastCallEvent.uuid);
+      FlutterIncomingCall.endCall(_lastCallEvent!.uuid);
     }
   }
 
@@ -102,22 +101,22 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('Incoming call now'),
                 onPressed: _incomingCall,
               ),
               SizedBox(height: 16),
-              FlatButton(
+              TextButton(
                 child: Text('Incoming call delay 5 sec'),
                 onPressed: () => Future.delayed(Duration(seconds: 5), _incomingCall),
               ),
               SizedBox(height: 16),
-              FlatButton(
+              TextButton(
                 child: Text('End current call'),
                 onPressed: _endCurrentCall,
               ),
               SizedBox(height: 16),
-              FlatButton(
+              TextButton(
                 child: Text('End all calls'),
                 onPressed: _endAllCalls,
               ),

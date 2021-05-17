@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart' show describeEnum, required;
+import 'package:flutter/foundation.dart' show describeEnum;
 
 import 'models.dart';
 import 'config.dart';
@@ -25,14 +25,11 @@ class FlutterIncomingCall {
       _eventChannel.receiveBroadcastStream().map(_toCallEvent);
 
   static Future<void> configure({
-    @required String appName,
+    required String appName,
     int duration = 30000,
-    ConfigAndroid android,
-    ConfigIOS ios,
+    ConfigAndroid? android,
+    ConfigIOS? ios,
   }) async {
-    assert(appName != null);
-    assert(duration != null);
-
     await _channel.invokeMethod('configure', <String, dynamic> {
       'appName': appName,
       'duration': duration,
@@ -42,12 +39,6 @@ class FlutterIncomingCall {
   }
 
   static Future<void> displayIncomingCall(String uuid, String name, String avatar, String handle, HandleType handleType, bool hasVideo) async {
-    assert(uuid != null);
-    assert(name != null);
-    assert(handle != null);
-    assert(handleType != null);
-    assert(hasVideo != null);
-
     await _channel.invokeMethod('displayIncomingCall', <String, dynamic>{
       'uuid': uuid,
       'name': name,
@@ -59,8 +50,6 @@ class FlutterIncomingCall {
   }
 
   static Future<void> endCall(String uuid) async {
-    assert(uuid != null);
-
     await _channel.invokeMethod('endCall', <String, dynamic>{
       'uuid': uuid,
     });
@@ -94,7 +83,7 @@ class FlutterIncomingCall {
           return AudioSessionEvent.fromMap(body);
       }
     }
-    return null;
+    throw Exception('Undefined event!');
   }
 
 

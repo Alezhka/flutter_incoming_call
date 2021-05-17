@@ -23,7 +23,13 @@ class CallEvent extends BaseCallEvent {
   final String handle;
   final String avatar;
 
-  CallEvent({this.action, this.uuid, this.name, this.handle, this.avatar});
+  CallEvent({
+    required this.action, 
+    required this.uuid, 
+    required this.name, 
+    required this.handle, 
+    required this.avatar
+  });
 
   factory CallEvent.fromMap(CallAction action, Map<String, dynamic> body) {
     return CallEvent(
@@ -45,7 +51,10 @@ class HoldEvent extends BaseCallEvent {
   final String uuid;
   final bool hold;
 
-  HoldEvent({this.uuid, this.hold});
+  HoldEvent({
+    required this.uuid, 
+    required this.hold
+  });
 
   factory HoldEvent.fromMap(Map<String, dynamic> body) {
     return HoldEvent(
@@ -65,7 +74,10 @@ class MuteEvent extends BaseCallEvent {
   final String uuid;
   final bool mute;
 
-  MuteEvent({this.uuid, this.mute});
+  MuteEvent({
+    required this.uuid, 
+    required this.mute
+  });
 
   factory MuteEvent.fromMap(Map<String, dynamic> body) {
     return MuteEvent(
@@ -86,7 +98,10 @@ class DmtfEvent extends BaseCallEvent {
   final String uuid;
   final String digits;
 
-  DmtfEvent({this.uuid, this.digits});
+  DmtfEvent({
+    required this.uuid, 
+    required this.digits
+  });
 
   factory DmtfEvent.fromMap(Map<String, dynamic> body) {
     return DmtfEvent(
@@ -105,7 +120,9 @@ class AudioSessionEvent extends BaseCallEvent {
 
   final bool activate;
 
-  AudioSessionEvent({this.activate});
+  AudioSessionEvent({
+    required this.activate
+  });
 
   factory AudioSessionEvent.fromMap(Map<String, dynamic> body) {
     return AudioSessionEvent(

@@ -1,6 +1,6 @@
 # flutter_incoming_call
 
-A Flutter plugin to show incoming call in your Flutter app!
+A Flutter plugin to show incoming call in your Flutter app! Alpha version(not ready for production!)
 
 ## Usage
 
