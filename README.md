@@ -6,15 +6,12 @@ A Flutter plugin to show incoming call in your Flutter app! Alpha version(not re
 
 To use this plugin:
 
-1. add to pubspec:
+1. Add to pubspec:
 ```
- flutter_incoming_call:
-    git:
-     url: https://github.com/Alezhka/flutter_incoming_call.git
+flutter_incoming_call: ^0.0.2
 ```
- as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
-2. configure plugin:
+2. Configure plugin:
 ```
 FlutterIncomingCall.configure(
     appName: 'example_incoming_call',
@@ -36,7 +33,7 @@ FlutterIncomingCall.configure(
     )
 )
 ```
-3. listen events:
+3. Listen events:
 ```
 FlutterIncomingCall.onEvent.listen((event) {
     if(event is CallEvent) { // Android | IOS
@@ -47,7 +44,7 @@ FlutterIncomingCall.onEvent.listen((event) {
     }
 });
 ```
-4. call api:
+4. Call api:
 ```
 FlutterIncomingCall.displayIncomingCall(String uid, String name, String avatar, String handle, String type, bool isVideo);
 FlutterIncomingCall.endCall(String uuid);
