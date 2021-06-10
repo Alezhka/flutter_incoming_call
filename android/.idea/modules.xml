@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/flutter_incoming_call.iml" filepath="$PROJECT_DIR$/.idea/modules/flutter_incoming_call.iml" group="flutter_incoming_call" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/flutter_incoming_call.iml" filepath="$PROJECT_DIR$/.idea/modules/flutter_incoming_call.iml" />
     </modules>
   </component>
 </project>

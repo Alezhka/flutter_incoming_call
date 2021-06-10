@@ -20,14 +20,14 @@ class CallEvent extends BaseCallEvent {
   final CallAction action;
   final String uuid;
   final String name;
-  final String handle;
+  final String handleType;
   final String avatar;
 
   CallEvent({
     required this.action, 
     required this.uuid, 
     required this.name, 
-    required this.handle, 
+    required this.handleType, 
     required this.avatar
   });
 
@@ -36,14 +36,14 @@ class CallEvent extends BaseCallEvent {
         action: action,
         uuid: body['uuid'],
         name: body['name'],
-        handle: body['handle'],
+        handleType: body['handleType'],
         avatar: body['avatar'],
     );
   }
 
   @override
   String toString() =>
-      'CallEvent { uuid: $uuid, name: $name, handle: $handle, avatar: $avatar }';
+      'CallEvent { uuid: $uuid, name: $name, handleType: $handleType, avatar: $avatar }';
 }
 
 class HoldEvent extends BaseCallEvent {

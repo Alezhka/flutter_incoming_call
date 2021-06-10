@@ -62,7 +62,7 @@ class FlutterIncomingCall {
   static BaseCallEvent _toCallEvent(dynamic data) {
     if (data is Map) {
       final event = data['event'];
-      final body = new Map<String, dynamic>.from(data['body']);
+      final body = Map<String, dynamic>.from(data['body']);
 
       switch(event) {
         case kEventCallAccept:

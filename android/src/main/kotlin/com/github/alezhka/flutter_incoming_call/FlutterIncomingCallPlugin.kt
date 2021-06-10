@@ -68,7 +68,7 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
 
         context?.let {
           if(Utils.isDeviceScreenLocked(it)) {
-            IncomingCallActivity.start(callData)
+            activity?.startActivity(IncomingCallActivity.start(callData))
           } else {
             notificationCall?.showCallNotification(callData, config!!)
           }
