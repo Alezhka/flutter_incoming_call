@@ -6,12 +6,26 @@ A Flutter plugin to show incoming call in your Flutter app! Alpha version(not re
 
 To use this plugin:
 
-1. Add to pubspec:
+1. Configure android project:
+Just add to your manifest activity and receiver.
 ```
-flutter_incoming_call: ^0.0.2
+<activity
+    android:name="com.github.alezhka.flutter_incoming_call.IncomingCallActivity"
+    android:theme="@style/AppCompatTheme"
+    android:screenOrientation="portrait"
+    android:showOnLockScreen="true">
+    <intent-filter>
+        <action android:name="com.github.alezhka.flutter_incoming_call.activity.ACTION_INCOMING_CALL" />
+        <category android:name="android.intent.category.DEFAULT" />
+    </intent-filter>
+</activity>
+
+<receiver android:name="com.github.alezhka.flutter_incoming_call.CallBroadcastReceiver"
+    android:enabled="true"
+    android:exported="false"/>
 ```
 
-2. Configure plugin:
+2. Configure Flutter plugin:
 ```
 FlutterIncomingCall.configure(
     appName: 'example_incoming_call',

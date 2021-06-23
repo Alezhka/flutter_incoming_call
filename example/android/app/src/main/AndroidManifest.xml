@@ -54,7 +54,8 @@
         <activity
             android:name="com.github.alezhka.flutter_incoming_call.IncomingCallActivity"
             android:theme="@style/AppCompatTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:showOnLockScreen="true">
             <intent-filter>
                 <action android:name="com.github.alezhka.flutter_incoming_call.activity.ACTION_INCOMING_CALL" />
                 <category android:name="android.intent.category.DEFAULT" />

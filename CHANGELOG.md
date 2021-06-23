@@ -1,3 +1,7 @@
+## 0.0.2+2
+
+* Add hide keybboard and update readme.
+
 ## 0.0.2+1
 
 * Fix crash on real device (Android).
