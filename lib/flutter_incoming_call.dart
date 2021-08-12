@@ -38,6 +38,31 @@ class FlutterIncomingCall {
     });
   }
 
+  static Future<void> displayIncomingCallAdvanced(String uuid, String name,
+      { String? avatar = null,
+        String? handle = null,
+        HandleType? handleType = null,
+        bool hasVideo = false,
+        bool supportsDTMF = false,
+        bool supportsHolding = false,
+        bool supportsGrouping = false,
+        bool supportsUngrouping = false
+      })
+  async {
+    await _channel.invokeMethod('displayIncomingCall', <String, dynamic>{
+      'uuid': uuid,
+      'name': name,
+      'avatar': avatar,
+      'handle': handle,
+      'handleType': handleType == null ? null : describeEnum(handleType),
+      'hasVideo': hasVideo,
+      'supportsDTMF': supportsDTMF,
+      'supportsHolding': supportsHolding,
+      'supportsGrouping': supportsGrouping,
+      'supportsUngrouping': supportsUngrouping,
+    });
+  }
+
   static Future<void> displayIncomingCall(String uuid, String name, String avatar, String handle, HandleType handleType, bool hasVideo) async {
     await _channel.invokeMethod('displayIncomingCall', <String, dynamic>{
       'uuid': uuid,
@@ -46,6 +71,10 @@ class FlutterIncomingCall {
       'handle': handle,
       'handleType': describeEnum(handleType),
       'hasVideo': hasVideo,
+      'supportsDTMF': true,
+      'supportsHolding': true,
+      'supportsGrouping': true,
+      'supportsUngrouping': true,
     });
   }
 
@@ -75,9 +104,9 @@ class FlutterIncomingCall {
           return CallEvent.fromMap(CallAction.started, body);
         case kEventToggleHold:
           return HoldEvent.fromMap(body);
-        case kEventToggleHold:
+        case kEventToggleMute:
           return MuteEvent.fromMap(body);
-        case kEventToggleHold:
+        case kEventToggleDmtf:
           return DmtfEvent.fromMap(body);
         case kEventToggleAudioSession:
           return AudioSessionEvent.fromMap(body);

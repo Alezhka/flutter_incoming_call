@@ -82,7 +82,7 @@ class MuteEvent extends BaseCallEvent {
   factory MuteEvent.fromMap(Map<String, dynamic> body) {
     return MuteEvent(
       uuid: body['uuid'],
-      mute: body['mute'],
+      mute: body['muted'],
     );
   }
 
