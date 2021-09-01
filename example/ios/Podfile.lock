@@ -14,9 +14,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_incoming_call/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_incoming_call: 6cf1756fc9d6cda1add82baaa6c8f53f15193798
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_incoming_call: d0df2dcc8d98c223fc2082be72a8750a2593283f
 
-PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1

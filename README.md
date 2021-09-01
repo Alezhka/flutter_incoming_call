@@ -11,7 +11,7 @@ Just add to your manifest activity and receiver.
 ```
 <activity
     android:name="com.github.alezhka.flutter_incoming_call.IncomingCallActivity"
-    android:theme="@style/AppCompatTheme"
+    android:theme="@style/Theme.AppCompat"
     android:screenOrientation="portrait"
     android:showOnLockScreen="true">
     <intent-filter>

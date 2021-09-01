@@ -1,3 +1,4 @@
+version: 0.0.1
 name: flutter_incoming_call_example
 description: Demonstrates how to use the flutter_incoming_call plugin.
 
