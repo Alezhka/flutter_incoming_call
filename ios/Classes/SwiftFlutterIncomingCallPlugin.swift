@@ -115,14 +115,17 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         callsData[uuidString] = callData
         
         let uuid = UUID(uuidString: callData.uuid)!
-        let handleType = getHandleType(callData.handleType)
+        var handle: CXHandle?
+        if (callData.handleType != nil && callData.handle != nil) {
+            handle = CXHandle(type: getHandleType(callData.handleType!), value: callData.handle!)
+        }
         
         let callUpdate = CXCallUpdate()
-        callUpdate.remoteHandle = CXHandle(type: handleType, value: callData.handle)
-        callUpdate.supportsDTMF = true
-        callUpdate.supportsHolding = true
-        callUpdate.supportsGrouping = true
-        callUpdate.supportsUngrouping = true
+        callUpdate.remoteHandle = handle
+        callUpdate.supportsDTMF = callData.supportsDTMF
+        callUpdate.supportsHolding = callData.supportsHolding
+        callUpdate.supportsGrouping = callData.supportsGrouping
+        callUpdate.supportsUngrouping = callData.supportsUngrouping
         callUpdate.hasVideo = callData.hasVideo
         callUpdate.localizedCallerName = callData.name
         
@@ -162,7 +165,7 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
     }
     
     func callEndTimeout(_ callData: CallData) {
-        if(callsAttended[callData.uuid] == true) {
+        if(!(self.callsAttended[callData.uuid] ?? false)) {
             endCallWithUUID(callData.uuid, 2)
             
             sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_MISSED, callData.toMap())
@@ -207,8 +210,11 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         }
         
         if(config.iconName != nil) {
-            let image = UIImage(named: config.iconName!)
-            providerConfiguration.iconTemplateImageData = image!.pngData()
+            if let image = UIImage(named: config.iconName!) {
+                providerConfiguration.iconTemplateImageData = image.pngData()
+            } else {
+                print("Unable to load flutter_incoming_call icon \(config.iconName!).");
+            }
         }
         if(config.ringtonePath != nil) {
             providerConfiguration.ringtoneSound = config.ringtonePath!
@@ -250,12 +256,11 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
     func configureAudioSession() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: AVAudioSession.CategoryOptions.allowBluetooth)
-            try audioSession.setMode(AVAudioSession.Mode.voiceChat)
-
-            try audioSession.setPreferredSampleRate(44100.0)
-            try audioSession.setPreferredIOBufferDuration(0.005)
-            try audioSession.setActive(true)
+            if (config?.avSessionSetCategory ?? true) { try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: AVAudioSession.CategoryOptions.allowBluetooth) }
+            if (config?.avSessionSetMode ?? true) { try audioSession.setMode(AVAudioSession.Mode.voiceChat) }
+            if (config?.avSessionSetPreferredSampleRate ?? true) { try audioSession.setPreferredSampleRate(44100.0) }
+            if (config?.avSessionSetPreferredIOBufferDuration ?? true) { try audioSession.setPreferredIOBufferDuration(0.005) }
+            if (config?.avSessionSetActive ?? true) { try audioSession.setActive(true) }
         } catch {
             print("Error messing with audio session: \(error)")
         }

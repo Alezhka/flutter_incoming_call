@@ -17,6 +17,11 @@ class Config {
     let supportsVideo: Bool
     let maximumCallGroups: Int
     let maximumCallsPerCallGroup: Int
+    let avSessionSetCategory: Bool
+    let avSessionSetMode: Bool
+    let avSessionSetPreferredSampleRate: Bool
+    let avSessionSetPreferredIOBufferDuration: Bool
+    let avSessionSetActive: Bool
     
     init(args: [String: Any?]) {
         self.appName = args["appName"] as? String ?? ""
@@ -27,6 +32,11 @@ class Config {
         self.maximumCallGroups = args["maximumCallGroups"] as? Int ?? 2
         self.maximumCallsPerCallGroup = args["maximumCallsPerCallGroup"] as? Int ?? 1
         self.duration = args["duration"] as? Int ?? 30000
+        self.avSessionSetCategory = args["avSessionSetCategory"] as? Bool ?? true;
+        self.avSessionSetMode = args["avSessionSetMode"] as? Bool ?? true;
+        self.avSessionSetPreferredSampleRate = args["avSessionSetPreferredSampleRate"] as? Bool ?? true;
+        self.avSessionSetPreferredIOBufferDuration = args["avSessionSetPreferredIOBufferDuration"] as? Bool ?? true;
+        self.avSessionSetActive = args["avSessionSetActive"] as? Bool ?? true;
     }
     
     func toMap() -> [String : Any] {
@@ -34,7 +44,12 @@ class Config {
             "appName": appName,
             "supportsVideo": supportsVideo,
             "includesCallsInRecents": includesCallsInRecents,
-            "maximumCallsPerCallGroup": maximumCallsPerCallGroup
+            "maximumCallsPerCallGroup": maximumCallsPerCallGroup,
+            "avSessionSetCategory": avSessionSetCategory,
+            "avSessionSetMode": avSessionSetMode,
+            "avSessionSetPreferredSampleRate": avSessionSetPreferredSampleRate,
+            "avSessionSetPreferredIOBufferDuration": avSessionSetPreferredIOBufferDuration,
+            "avSessionSetActive": avSessionSetActive
         ] as [String : Any]
         if(ringtonePath != nil) {
             map["ringtonePath"] = ringtonePath
@@ -50,29 +65,41 @@ class Config {
 class CallData {
     
     let uuid: String
-    let handle: String
+    let handle: String?
     let name: String
     let avatar: String?
-    let handleType: String
+    let handleType: String?
     let hasVideo: Bool
+    let supportsDTMF: Bool
+    let supportsHolding: Bool
+    let supportsGrouping: Bool
+    let supportsUngrouping: Bool
     
     init(args: [String: Any]) {
         self.uuid = args["uuid"] as? String ?? ""
-        self.handle = args["handle"] as? String ?? ""
+        self.handle = args["handle"] as? String
         self.name = args["name"] as? String ?? ""
         self.avatar = args["avatar"] as? String ?? ""
-        self.handleType = args["handleType"] as? String ?? ""
+        self.handleType = args["handleType"] as? String
         self.hasVideo = args["hasVideo"] as? Bool ?? false
+        self.supportsDTMF = args["supportsDTMF"] as? Bool ?? false
+        self.supportsHolding = args["supportsHolding"] as? Bool ?? false
+        self.supportsGrouping = args["supportsGrouping"] as? Bool ?? false
+        self.supportsUngrouping = args["supportsUngrouping"] as? Bool ?? false
     }
     
     func toMap() -> [String : Any] {
         return [
             "uuid": uuid,
             "name": name,
-            "handle": handle,
+            "handle": handle ?? "",
             "avatar": avatar ?? "",
-            "handleType": handleType,
-            "hasVideo": hasVideo
+            "handleType": handleType ?? "",
+            "hasVideo": hasVideo,
+            "supportsDTMF": supportsDTMF,
+            "supportsHolding": supportsHolding,
+            "supportsGrouping": supportsGrouping,
+            "supportsUngrouping": supportsUngrouping
         ]
     }
 }
