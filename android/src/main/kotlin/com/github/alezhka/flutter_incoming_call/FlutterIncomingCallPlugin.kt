@@ -113,7 +113,7 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     activity = binding.activity
     context = binding.activity
-    notificationCall = CallNotification(context!!)
+    notificationCall = CallNotification(binding.activity)
     callPrefs = CallPreferences(binding.activity)
   }
 
@@ -128,7 +128,7 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
     activity = binding.activity
     context = binding.activity
     callPrefs = CallPreferences(binding.activity)
-    notificationCall = CallNotification(context!!)
+    notificationCall = CallNotification(binding.activity)
   }
 
   override fun onDetachedFromActivity() {
