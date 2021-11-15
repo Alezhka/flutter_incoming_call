@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show describeEnum;
+import 'package:flutter/services.dart';
 
-import 'models.dart';
 import 'config.dart';
+import 'models.dart';
 
-export 'models.dart';
 export 'config.dart';
+export 'models.dart';
 
 enum HandleType {
   generic,
@@ -17,12 +17,10 @@ enum HandleType {
 }
 
 class FlutterIncomingCall {
-
   static const MethodChannel _channel = const MethodChannel('flutter_incoming_call');
   static const EventChannel _eventChannel = const EventChannel('flutter_incoming_call_events');
 
-  static Stream<BaseCallEvent> get onEvent =>
-      _eventChannel.receiveBroadcastStream().map(_toCallEvent);
+  static Stream<BaseCallEvent> get onEvent => _eventChannel.receiveBroadcastStream().map(_toCallEvent);
 
   static Future<void> configure({
     required String appName,
@@ -30,25 +28,23 @@ class FlutterIncomingCall {
     ConfigAndroid? android,
     ConfigIOS? ios,
   }) async {
-    await _channel.invokeMethod('configure', <String, dynamic> {
+    await _channel.invokeMethod('configure', <String, dynamic>{
       'appName': appName,
       'duration': duration,
-      if(Platform.isAndroid && android != null) ...android.toMap(),
-      if(Platform.isIOS && ios != null) ...ios.toMap(),
+      if (Platform.isAndroid && android != null) ...android.toMap(),
+      if (Platform.isIOS && ios != null) ...ios.toMap(),
     });
   }
 
   static Future<void> displayIncomingCallAdvanced(String uuid, String name,
-      { String? avatar = null,
-        String? handle = null,
-        HandleType? handleType = null,
-        bool hasVideo = false,
-        bool supportsDTMF = false,
-        bool supportsHolding = false,
-        bool supportsGrouping = false,
-        bool supportsUngrouping = false
-      })
-  async {
+      {String? avatar = null,
+      String? handle = null,
+      HandleType? handleType = null,
+      bool hasVideo = false,
+      bool supportsDTMF = false,
+      bool supportsHolding = false,
+      bool supportsGrouping = false,
+      bool supportsUngrouping = false}) async {
     await _channel.invokeMethod('displayIncomingCall', <String, dynamic>{
       'uuid': uuid,
       'name': name,
@@ -63,7 +59,8 @@ class FlutterIncomingCall {
     });
   }
 
-  static Future<void> displayIncomingCall(String uuid, String name, String avatar, String handle, HandleType handleType, bool hasVideo) async {
+  static Future<void> displayIncomingCall(
+      String uuid, String name, String avatar, String handle, HandleType handleType, bool hasVideo) async {
     await _channel.invokeMethod('displayIncomingCall', <String, dynamic>{
       'uuid': uuid,
       'name': name,
@@ -93,7 +90,7 @@ class FlutterIncomingCall {
       final event = data['event'];
       final body = Map<String, dynamic>.from(data['body']);
 
-      switch(event) {
+      switch (event) {
         case kEventCallAccept:
           return CallEvent.fromMap(CallAction.accept, body);
         case kEventCallDecline:
@@ -114,6 +111,4 @@ class FlutterIncomingCall {
     }
     throw Exception('Undefined event!');
   }
-
-
 }

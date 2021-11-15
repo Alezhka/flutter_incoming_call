@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -14,6 +15,8 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+
+private const val TAG = "FlutterIncomingCallPlug"
 
 /** FlutterIncomingCallPlugin */
 class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -60,19 +63,25 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
       }
       "displayIncomingCall" -> {
         if(!isConfigured) {
+          android.util.Log.e(TAG, "onMethodCall displayIncomingCall: Not Configured")
           result.error("not_configured", "Not configured", null)
           return
         }
-        
+
         val callData = FactoryModels.parseCallData(call)
+        android.util.Log.d(TAG, "onMethodCall displayIncomingCall callData: $callData")
 
         context?.let {
-          if(Utils.isDeviceScreenLocked(it)) {
+          val isScreenLocked = Utils.isDeviceScreenLocked(it)
+          Log.d(TAG, "onMethodCall displayIncomingCall isScreenLocked: $isScreenLocked ")
+          if(isScreenLocked) {
             activity?.startActivity(IncomingCallActivity.start(callData))
           } else {
             notificationCall?.showCallNotification(callData, config!!)
           }
           it.sendBroadcast(CallBroadcastReceiver.startedIntent(it, callData))
+        } ?: run {
+          android.util.Log.e(TAG, "onMethodCall displayIncomingCall: context is null", )
         }
 
         result.success(null)
