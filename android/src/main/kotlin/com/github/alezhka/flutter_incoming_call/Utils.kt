@@ -9,6 +9,10 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.telephony.TelephonyManager
+import android.os.PowerManager
+
+
+
 
 
 object Utils {
@@ -47,10 +51,12 @@ object Utils {
      */
     @TargetApi(Build.VERSION_CODES.M)
     private fun isDeviceLocked(context: Context): Boolean {
-        val telMgr = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val simState = telMgr.simState
-        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 23+
-        return keyguardManager.isDeviceSecure && simState != TelephonyManager.SIM_STATE_ABSENT
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        return powerManager.isInteractive
+//        val telMgr = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+//        val simState = telMgr.simState
+//        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 23+
+//        return keyguardManager.isDeviceSecure && simState != TelephonyManager.SIM_STATE_ABSENT
     }
 
     /**
