@@ -65,6 +65,29 @@ class CallNotification(private val context: Context) {
         notificationManager.notify(notificationID, notification)
     }
 
+//    fun showFullScreenNotification(callData: CallData, config: PluginConfig) {
+//        val notificationID = callData.notificationId
+//
+//        val notificationManager = notificationManager()
+//        createCallNotificationChannel(notificationManager, config)
+//        notificationManager.notify(notificationID, notification)
+//    }
+//
+//    fun createNotification(): Notification {
+//        val fullScreenIntent = Intent(context, IncomingCallActivity::class.java)
+//        val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, 0)
+//
+//        return NotificationCompat.Builder(context, CHANNEL_ID)
+//                .setSmallIcon(R.drawable.notifications_active_black_24)
+//                .setColor(ResourcesCompat.getColor(context.resources, R.color.purple_200, null))
+//                .setContentTitle(context.getString(R.string.notification_title))
+//                .setAutoCancel(true)
+//                .setFullScreenIntent(fullScreenPendingIntent, true)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setCategory(NotificationCompat.CATEGORY_ALARM)
+//                .build()
+//    }
+
     fun showMissCallNotification(callData: CallData) {
         val notificationID = callData.notificationId
         val missedCallSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
