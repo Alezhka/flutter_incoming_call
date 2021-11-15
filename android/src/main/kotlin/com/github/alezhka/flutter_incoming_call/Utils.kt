@@ -52,7 +52,7 @@ object Utils {
     @TargetApi(Build.VERSION_CODES.M)
     private fun isDeviceLocked(context: Context): Boolean {
         val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        return powerManager.isInteractive
+        return !powerManager.isInteractive
 //        val telMgr = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 //        val simState = telMgr.simState
 //        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 23+
