@@ -16,12 +16,12 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-private const val TAG = "FlutterIncomingCallPlug"
 
 /** FlutterIncomingCallPlugin */
 class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   
   companion object {
+    const val TAG = "FlutterIncomingCallPlug"
     var activity: Activity? = null
     val eventHandler = EventStreamHandler()
     var ringtonePlayer: CallPlayer? = null
@@ -81,7 +81,7 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
           }
           it.sendBroadcast(CallBroadcastReceiver.startedIntent(it, callData))
         } ?: run {
-          android.util.Log.e(TAG, "onMethodCall displayIncomingCall: context is null", )
+          android.util.Log.e(TAG, "onMethodCall displayIncomingCall: context is null")
         }
 
         result.success(null)
