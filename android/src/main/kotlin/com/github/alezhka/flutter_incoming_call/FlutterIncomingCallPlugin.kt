@@ -71,15 +71,8 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
         android.util.Log.d(TAG, "onMethodCall displayIncomingCall callData: $callData")
 
         context?.let {
-          val isScreenLocked = Utils.isDeviceScreenLocked(it)
-          Log.d(TAG, "onMethodCall displayIncomingCall isScreenLocked: $isScreenLocked ")
-          if(isScreenLocked) {
-//            activity?.startActivity(IncomingCallActivity.start(callData))
-//            notificationCall?.showFullScreenNotification(callData, config!!)
-            notificationCall?.showCallNotification(callData, config!!)
-          } else {
-            notificationCall?.showCallNotification(callData, config!!)
-          }
+          Log.d(TAG, "onMethodCall displayIncomingCall")
+          notificationCall?.showCallNotification(callData, config!!)
           it.sendBroadcast(CallBroadcastReceiver.startedIntent(it, callData))
         } ?: run {
           android.util.Log.e(TAG, "onMethodCall displayIncomingCall: context is null")

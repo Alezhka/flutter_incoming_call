@@ -17,59 +17,6 @@ import android.os.PowerManager
 
 object Utils {
 
-    fun isDeviceScreenLocked(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            isDeviceLocked(context)
-        } else {
-            isPatternSet(context) || isPassOrPinSet(context)
-        }
-    }
-
-    /**
-     * @return true if pattern set, false if not (or if an issue when checking)
-     */
-    private fun isPatternSet(context: Context): Boolean {
-        val cr: ContentResolver = context.contentResolver
-        return try {
-            val lockPatternEnable: Int = Settings.Secure.getInt(cr, Settings.Secure.LOCK_PATTERN_ENABLED)
-            lockPatternEnable == 1
-        } catch (e: Settings.SettingNotFoundException) {
-            false
-        }
-    }
-
-    /**
-     * @return true if pass or pin set
-     */
-    private fun isPassOrPinSet(context: Context): Boolean {
-        val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager //api 16+
-        return keyguardManager.isKeyguardSecure
-    }
-
-    /**
-     * @return true if device is locked
-     */
-    @TargetApi(Build.VERSION_CODES.M)
-    private fun isDeviceLocked(context: Context): Boolean {
-        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        return !powerManager.isInteractive
-    }
-
-    /**
-     * @return Main activity class. 
-     */
-    fun getMainActivityClass(context: Context): Class<*>? {
-        val packageName = context.packageName
-        val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
-        val className = launchIntent?.component?.className
-        return try {
-            className?.let{ Class.forName(it) }
-        } catch (e: ClassNotFoundException) {
-            e.printStackTrace()
-            null
-        }
-    }
-
     /**
      * Back main activity to foreground.
      */
