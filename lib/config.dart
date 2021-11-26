@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
-
 class ConfigAndroid {
-
   final String channelId;
   final String channelName;
   final String channelDescription;
   final String ringtonePath;
+  final bool ringtone;
   final bool vibration;
 
   ConfigAndroid({
@@ -14,19 +12,20 @@ class ConfigAndroid {
     required this.channelDescription,
     this.ringtonePath = "default",
     this.vibration = false,
+    this.ringtone = true,
   });
 
   Map<String, dynamic> toMap() => {
-    'channelId': channelId,
-    'channelName': channelName,
-    'channelDescription': channelDescription,
-    'ringtonePath': ringtonePath,
-    'vibration': vibration,
-  };
+        'channelId': channelId,
+        'channelName': channelName,
+        'channelDescription': channelDescription,
+        'ringtonePath': ringtonePath,
+        'vibration': vibration,
+        'ringtone': ringtone,
+      };
 }
 
 class ConfigIOS {
-
   final bool supportsVideo;
   final bool includesCallsInRecents;
   final int maximumCallGroups;
@@ -39,31 +38,30 @@ class ConfigIOS {
   final bool avSessionSetPreferredIOBufferDuration;
   final bool avSessionSetActive;
 
-  ConfigIOS({
-    required this.supportsVideo,
-    required this.includesCallsInRecents,
-    required this.maximumCallGroups,
-    required this.maximumCallsPerCallGroup,
-    required this.iconName,
-    this.ringtonePath,
-    this.avSessionSetActive = true,
-    this.avSessionSetCategory = true,
-    this.avSessionSetMode = true,
-    this.avSessionSetPreferredIOBufferDuration = true,
-    this.avSessionSetPreferredSampleRate = true
-  });
+  ConfigIOS(
+      {required this.supportsVideo,
+      required this.includesCallsInRecents,
+      required this.maximumCallGroups,
+      required this.maximumCallsPerCallGroup,
+      required this.iconName,
+      this.ringtonePath,
+      this.avSessionSetActive = true,
+      this.avSessionSetCategory = true,
+      this.avSessionSetMode = true,
+      this.avSessionSetPreferredIOBufferDuration = true,
+      this.avSessionSetPreferredSampleRate = true});
 
   Map<String, dynamic> toMap() => {
-    'supportsVideo': supportsVideo,
-    'includesCallsInRecents': includesCallsInRecents,
-    'maximumCallGroups': maximumCallGroups,
-    'maximumCallsPerCallGroup': maximumCallsPerCallGroup,
-    'ringtonePath': ringtonePath,
-    'iconName': iconName,
-    'avSessionSetActive': avSessionSetActive,
-    'avSessionSetCategory': avSessionSetCategory,
-    'avSessionSetMode': avSessionSetMode,
-    'avSessionSetPreferredIOBufferDuration': avSessionSetPreferredIOBufferDuration,
-    'avSessionSetPreferredSampleRate': avSessionSetPreferredSampleRate
-  };
+        'supportsVideo': supportsVideo,
+        'includesCallsInRecents': includesCallsInRecents,
+        'maximumCallGroups': maximumCallGroups,
+        'maximumCallsPerCallGroup': maximumCallsPerCallGroup,
+        'ringtonePath': ringtonePath,
+        'iconName': iconName,
+        'avSessionSetActive': avSessionSetActive,
+        'avSessionSetCategory': avSessionSetCategory,
+        'avSessionSetMode': avSessionSetMode,
+        'avSessionSetPreferredIOBufferDuration': avSessionSetPreferredIOBufferDuration,
+        'avSessionSetPreferredSampleRate': avSessionSetPreferredSampleRate
+      };
 }
