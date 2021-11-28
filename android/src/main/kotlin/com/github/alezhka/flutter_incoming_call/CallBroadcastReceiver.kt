@@ -3,10 +3,12 @@ package com.github.alezhka.flutter_incoming_call
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 
 class CallBroadcastReceiver: BroadcastReceiver() {
 
     companion object {
+        private const val TAG = "CallBroadcastReceiver"
         private const val ACTION_STARTED = "ACTION_STARTED"
         private const val ACTION_DISMISS = "ACTION_DISMISS"
         private const val ACTION_ACCEPT = "ACTION_ACCEPT"
@@ -64,11 +66,13 @@ class CallBroadcastReceiver: BroadcastReceiver() {
                 callNotification.clearNotification(callData.notificationId)
                 
                 Utils.backToForeground(context, FlutterIncomingCallPlugin.activity)
+                Log.d(TAG, "onReceive: EVENT_CALL_ACCEPT")
                 sendCallEvent(EVENT_CALL_ACCEPT, callData)
             }
             ACTION_DISMISS -> {
                 FlutterIncomingCallPlugin.ringtonePlayer?.stop()
                 callNotification.clearNotification(callData.notificationId)
+                Log.d(TAG, "onReceive: EVENT_CALL_DECLINE")
                 sendCallEvent(EVENT_CALL_DECLINE, callData)
             }
             ACTION_TIMEOUT -> {
@@ -79,6 +83,7 @@ class CallBroadcastReceiver: BroadcastReceiver() {
     }
 
     private fun sendCallEvent(event: String, callData: CallData) {
+        Log.d(TAG, "sendCallEvent $event; callData: $callData")
         val actionData = mapOf(
                 "uuid" to callData.uuid,
                 "name" to callData.name,
@@ -89,5 +94,4 @@ class CallBroadcastReceiver: BroadcastReceiver() {
         )
         FlutterIncomingCallPlugin.eventHandler.send(event, actionData)
     }
-    
 }

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -19,6 +20,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   
   companion object {
+    val TAG = "FlutterIncomingCallPlug"
     var activity: Activity? = null
     val eventHandler = EventStreamHandler()
     var ringtonePlayer: CallPlayer? = null
@@ -60,19 +62,20 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
       }
       "displayIncomingCall" -> {
         if(!isConfigured) {
+          android.util.Log.e(TAG, "onMethodCall displayIncomingCall: Not Configured")
           result.error("not_configured", "Not configured", null)
           return
         }
-        
+
         val callData = FactoryModels.parseCallData(call)
+        android.util.Log.d(TAG, "onMethodCall displayIncomingCall callData: $callData")
 
         context?.let {
-          if(Utils.isDeviceScreenLocked(it)) {
-            activity?.startActivity(IncomingCallActivity.start(callData))
-          } else {
-            notificationCall?.showCallNotification(callData, config!!)
-          }
+          Log.d(TAG, "onMethodCall displayIncomingCall")
+          notificationCall?.showCallNotification(callData, config!!)
           it.sendBroadcast(CallBroadcastReceiver.startedIntent(it, callData))
+        } ?: run {
+          android.util.Log.e(TAG, "onMethodCall displayIncomingCall: context is null")
         }
 
         result.success(null)
@@ -105,7 +108,7 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     activity = binding.activity
     context = binding.activity
-    notificationCall = CallNotification(context!!)
+    notificationCall = CallNotification(binding.activity)
     callPrefs = CallPreferences(binding.activity)
   }
 
@@ -120,7 +123,7 @@ class FlutterIncomingCallPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
     activity = binding.activity
     context = binding.activity
     callPrefs = CallPreferences(binding.activity)
-    notificationCall = CallNotification(context!!)
+    notificationCall = CallNotification(binding.activity)
   }
 
   override fun onDetachedFromActivity() {

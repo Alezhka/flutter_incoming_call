@@ -10,6 +10,7 @@ data class PluginConfig(
         val channelName: String,
         val channelDescription: String,
         val vibration: Boolean,
+        val ringtone: Boolean,
         val ringtonePath: String?,
         val duration: Long
 )
@@ -46,10 +47,11 @@ object FactoryModels {
         val channelId = call.argument("channelId") as String? ?: ""
         val channelName = call.argument("channelName") as String? ?: ""
         val channelDescription = call.argument("channelDescription") as String? ?: ""
-        val duration = (call.argument("duration") as Int? ?: 30000).toLong()
         val vibration = call.argument("vibration") as Boolean? ?: false
+        val ringtone = call.argument("ringtone") as Boolean? ?: false
         val ringtonePath = call.argument("ringtonePath") as String?
-        return PluginConfig(appName, channelId, channelName, channelDescription, vibration, ringtonePath, duration)
+        val duration = (call.argument("duration") as Int? ?: 30000).toLong()
+        return PluginConfig(appName, channelId, channelName, channelDescription, vibration, ringtone, ringtonePath, duration)
     }
 
     fun defaultConfig(): PluginConfig {
@@ -59,7 +61,8 @@ object FactoryModels {
         val channelDescription = "Call channel"
         val duration = 30000L
         val vibration = false
+        val ringtone = true
         val ringtonePath = "default"
-        return PluginConfig(appName, channelId, channelName, channelDescription, vibration, ringtonePath, duration)
+        return PluginConfig(appName, channelId, channelName, channelDescription, vibration, ringtone, ringtonePath, duration)
     }
 }
