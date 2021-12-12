@@ -1,3 +1,7 @@
+## 0.1.1
+
+* Update dependencies
+
 ## 0.1.0
 
 * Fixed a lot of bugs. Add new congif parameters Thanks @defano (See more: https://github.com/Alezhka/flutter_incoming_call/pull/3).

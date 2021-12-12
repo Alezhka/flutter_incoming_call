@@ -42,7 +42,8 @@ class CallPlayer(private val context: Context, var config: PluginConfig) {
     }
 
     private fun playMusic(callData: CallData) {
-        val uri = getRingtoneUri(config.ringtonePath!!)
+        val ringtonePath = config.ringtonePath ?: return
+        val uri = getRingtoneUri(ringtonePath)
         val attribution = AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)

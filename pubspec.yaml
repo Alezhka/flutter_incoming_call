@@ -1,7 +1,6 @@
 name: flutter_incoming_call
 description: A Flutter plugin to show incoming call in your Flutter app!
-version: 0.1.0
-author: Aleksei Sturov
+version: 0.1.1
 homepage: https://github.com/Alezhka/flutter_incoming_call
 
 environment:

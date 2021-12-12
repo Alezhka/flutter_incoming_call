@@ -62,7 +62,7 @@ class CallBroadcastReceiver: BroadcastReceiver() {
             ACTION_ACCEPT -> {
                 FlutterIncomingCallPlugin.ringtonePlayer?.stop()
                 callNotification.clearNotification(callData.notificationId)
-                
+
                 Utils.backToForeground(context, FlutterIncomingCallPlugin.activity)
                 sendCallEvent(EVENT_CALL_ACCEPT, callData)
             }
