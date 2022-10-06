@@ -335,11 +335,9 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
     
         if let callData = callsData[uuidString] {
             sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_CALL_DECLINE, callData.toMap())
+            callsAttended[uuidString] = true        
         }
-        
-        callsAttended.removeValue(forKey: uuidString)
-        callsData.removeValue(forKey: uuidString)
-        
+
         action.fulfill()
     }
 
@@ -390,5 +388,4 @@ public class SwiftFlutterIncomingCallPlugin: NSObject, FlutterPlugin, CXProvider
         let audiosessionData = ToggleAudiosessionData(false)
         sendEvent(SwiftFlutterIncomingCallPlugin.EVENT_TOGGLE_AUDIOSESSION, audiosessionData.toMap())
     }
-    
 }
