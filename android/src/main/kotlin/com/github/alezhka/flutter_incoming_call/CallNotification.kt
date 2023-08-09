@@ -25,7 +25,7 @@ class CallNotification(private val context: Context) {
                 Notification.PRIORITY_MAX
             }
 
-        private val pendingIntentFlag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
+        private val pendingIntentFlag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) (PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT) else PendingIntent.FLAG_UPDATE_CURRENT
     }
 
     fun showCallNotification(callData: CallData, config: PluginConfig) {
