@@ -8,7 +8,7 @@ To use this plugin:
 
 1. Configure android project:
 Just add to your manifest activity and receiver.
-```
+```xml
 <activity
     android:name="com.github.alezhka.flutter_incoming_call.IncomingCallActivity"
     android:theme="@style/Theme.AppCompat"
@@ -26,7 +26,7 @@ Just add to your manifest activity and receiver.
 ```
 
 2. Configure Flutter plugin:
-```
+```dart
 FlutterIncomingCall.configure(
     appName: 'example_incoming_call',
     duration: 30000,
@@ -48,7 +48,7 @@ FlutterIncomingCall.configure(
 )
 ```
 3. Listen events:
-```
+```dart
 FlutterIncomingCall.onEvent.listen((event) {
     if(event is CallEvent) { // Android | IOS
     } else if(event is HoldEvent) { // IOS
@@ -59,7 +59,7 @@ FlutterIncomingCall.onEvent.listen((event) {
 });
 ```
 4. Call api:
-```
+```dart
 FlutterIncomingCall.displayIncomingCall(String uid, String name, String avatar, String handle, String type, bool isVideo);
 FlutterIncomingCall.endCall(String uuid);
 FlutterIncomingCall.endAllCalls();

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart' show describeEnum;
 
 import 'models.dart';
 import 'config.dart';
@@ -39,9 +38,9 @@ class FlutterIncomingCall {
   }
 
   static Future<void> displayIncomingCallAdvanced(String uuid, String name,
-      { String? avatar = null,
-        String? handle = null,
-        HandleType? handleType = null,
+      { String? avatar,
+        String? handle,
+        HandleType? handleType,
         bool hasVideo = false,
         bool supportsDTMF = false,
         bool supportsHolding = false,
@@ -54,7 +53,7 @@ class FlutterIncomingCall {
       'name': name,
       'avatar': avatar,
       'handle': handle,
-      'handleType': handleType == null ? null : describeEnum(handleType),
+      'handleType': handleType == null ? null : handleType.name,
       'hasVideo': hasVideo,
       'supportsDTMF': supportsDTMF,
       'supportsHolding': supportsHolding,
@@ -69,7 +68,7 @@ class FlutterIncomingCall {
       'name': name,
       'avatar': avatar,
       'handle': handle,
-      'handleType': describeEnum(handleType),
+      'handleType': handleType.name,
       'hasVideo': hasVideo,
       'supportsDTMF': true,
       'supportsHolding': true,

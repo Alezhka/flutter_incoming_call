@@ -1,3 +1,11 @@
+## 0.1.2
+
+* Update dependencies: 
+  - Dart 3.2.0
+  - Flutter 3.16.0
+  - Kotlin 1.9.20
+  - Gradle 7.2
+
 ## 0.1.1
 
 * Update dependencies
