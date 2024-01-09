@@ -2,7 +2,7 @@ package com.github.alezhka.flutter_incoming_call
 
 import android.os.Parcelable
 import io.flutter.plugin.common.MethodCall
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 data class PluginConfig(
         val appName: String,

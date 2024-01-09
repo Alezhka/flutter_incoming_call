@@ -5,6 +5,7 @@
   - Flutter 3.16.0
   - Kotlin 1.9.20
   - Gradle 7.2
+  - Android 34 Support.
 
 ## 0.1.1
 
